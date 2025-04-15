@@ -1,36 +1,88 @@
 from django.db import models
 
 
-class HeaderLogo(models.Model):
-    header_logo = models.ImageField('Лого хедера', upload_to='header_logo')
+class SiteLogo(models.Model):
+    header_logo = models.ImageField('Лого сайта', upload_to='header_site')
     
     class Meta:
-        verbose_name = 'Лого хедера'
-        verbose_name_plural = 'Логи хедера'
+        verbose_name = 'Лого сайта'
+        verbose_name_plural = 'Лого сайта'
 
     def __srt__(self):
-        return f'Лого хедера {self.id}'
+        return f'Лого сайта {self.id}'
 
 
 class BurgerCategory(models.Model):
-    category_text = models.CharField(max_length=30,verbose_name='Текст категории')
+    category_text = models.CharField(max_length=30,verbose_name='Текст бургер категории')
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Категория бургера'
+        verbose_name_plural = 'Категории бургера'
 
 
     def __str__(self):
         return self.category_text
+    
 
 class BurgerLinks(models.Model):
     link_text = models.CharField( max_length=30, verbose_name='Текст ссылок')
-    url_link = models.URLField(verbose_name='Ссылка')
+    url_link = models.URLField(verbose_name='Ссылка',null=True)
     category = models.ForeignKey(BurgerCategory, on_delete=models.CASCADE, related_name='link',blank=True,null=True)
+    is_social = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = 'Ссылка'
-        verbose_name_plural = 'Ссылки'
+        verbose_name = 'Ссылка бургера'
+        verbose_name_plural = 'Ссылки бургера'
     
     def __str__(self):
         return self.link_text
+    
+
+class Advertisments(models.Model):
+    advertisment_image = models.ImageField('Реклама',upload_to='advertisment')
+    advertisment_url = models.URLField(verbose_name='Ссылка рекламы')
+    order = models.PositiveIntegerField("Порядок", default=1)
+
+    class Meta:
+        verbose_name = "Реклама"
+        verbose_name_plural = "Рекламы"
+        ordering = ("order",)
+
+    def __str__(self):
+        return  'реклама ' + str(self.order)
+
+
+class FooterCopyright(models.Model):
+    copyright = models.CharField(max_length=50,verbose_name='Копирайт')
+
+    class Meta:
+        verbose_name = "Копирайт"
+        verbose_name_plural = "Копирайт"
+    
+    def __str__(self):
+        return  self.copyright
+    
+    
+class FooterSiteLinksCategory(models.Model):
+    footer_category = models.CharField(max_length=20,verbose_name='Категория футера')
+
+    class Meta:
+        verbose_name = "Категория футера"  
+        verbose_name_plural = "Категории футера"
+
+    def __str__(self):
+        return  self.footer_category
+    
+
+class FooterSiteLinks(models.Model):
+    footer_link_text = models.CharField(max_length=20,verbose_name='Текст ссылка в футере')
+    footer_link_url = models.URLField(verbose_name='Ссылка текста в футере')
+    is_social = models.BooleanField(default=False)
+    category = models.ForeignKey(FooterSiteLinksCategory, on_delete=models.CASCADE, related_name='link',blank=True,null=True)
+
+    class Meta:
+        verbose_name = "Ссылка футера"    
+        verbose_name_plural = "Ссылки футера"
+    
+    def __str__(self):
+        return  self.footer_link_text
