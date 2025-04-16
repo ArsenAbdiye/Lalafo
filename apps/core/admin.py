@@ -20,8 +20,8 @@ class BurgerCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(BurgerLinks)
 class BurgerLinksAdmin(admin.ModelAdmin):
-    list_display = ['id', 'link_text', 'url_link', 'category', 'is_social']
-    list_filter = ['is_social', 'category']
+    list_display = ['id', 'link_text', 'url_link', 'category']
+    list_filter = ['category']
     search_fields = ['link_text']
 
 
@@ -50,6 +50,6 @@ class FooterSiteLinksCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(FooterSiteLinks)
 class FooterSiteLinksAdmin(admin.ModelAdmin):
-    list_display = ['id', 'footer_link_text', 'footer_link_url', 'category', 'is_social']
-    list_filter = ['is_social', 'category']
+    list_display = ['id', 'footer_link_text', 'footer_link_url', 'category']
+    list_filter = ['category']
     search_fields = ['footer_link_text']

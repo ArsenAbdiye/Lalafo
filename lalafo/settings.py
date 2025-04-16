@@ -40,11 +40,13 @@ INSTALLED_APPS = [
 
     'apps.core',
     'apps.user',
+    'apps.items',
 
     'psycopg2',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [

@@ -27,8 +27,7 @@ class BurgerCategory(models.Model):
 class BurgerLinks(models.Model):
     link_text = models.CharField( max_length=30, verbose_name='Текст ссылок')
     url_link = models.URLField(verbose_name='Ссылка',null=True)
-    category = models.ForeignKey(BurgerCategory, on_delete=models.CASCADE, related_name='link',blank=True,null=True)
-    is_social = models.BooleanField(default=False)
+    category = models.ForeignKey(BurgerCategory, on_delete=models.CASCADE, related_name='link',blank=True)
 
     class Meta:
         verbose_name = 'Ссылка бургера'
@@ -77,8 +76,7 @@ class FooterSiteLinksCategory(models.Model):
 class FooterSiteLinks(models.Model):
     footer_link_text = models.CharField(max_length=20,verbose_name='Текст ссылка в футере')
     footer_link_url = models.URLField(verbose_name='Ссылка текста в футере')
-    is_social = models.BooleanField(default=False)
-    category = models.ForeignKey(FooterSiteLinksCategory, on_delete=models.CASCADE, related_name='link',blank=True,null=True)
+    category = models.ForeignKey(FooterSiteLinksCategory, on_delete=models.CASCADE, related_name='link',blank=True)
 
     class Meta:
         verbose_name = "Ссылка футера"    
