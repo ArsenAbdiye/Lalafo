@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import CustomUser
 
 import phonenumbers
-from phonenumbers import geocoder, carrier, NumberParseException
+from phonenumbers import NumberParseException
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
