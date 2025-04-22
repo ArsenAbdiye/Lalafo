@@ -77,7 +77,7 @@ class CategoryOptionsFields(models.Model):
     
 
 class Listing(models.Model):
-    listing_image = models.FileField(upload_to='listing_images/')
+    listing_image = models.ImageField('Картника объявления', upload_to='listing_image')
     description = models.TextField(max_length=6000, verbose_name="Описание")
     category = models.IntegerField(verbose_name="Id категории")
     price = models.DecimalField(max_digits=12, decimal_places=2,verbose_name="Цена")
@@ -87,3 +87,5 @@ class Listing(models.Model):
     hide_phone = models.BooleanField(default=False, verbose_name="Скрыть номер")
     created_at = models.DateTimeField(auto_now_add=True)
     option_fields = models.JSONField(default=dict, verbose_name="Поля опций")
+
+

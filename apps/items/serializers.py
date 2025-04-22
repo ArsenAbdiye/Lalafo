@@ -45,10 +45,9 @@ class CategoryOptionsSerializer(serializers.ModelSerializer):
 
 
 class ListingSerializer(serializers.ModelSerializer):
-    listing_image = serializers.FileField()
     class Meta:
         model = Listing
-        fields = ['id', 'listing_image', 'description', 'category', 'price',
+        fields = ['listing_image', 'description', 'category', 'price',
                 'currency', 'contact_name', 'phone_number', 'hide_phone',
                 'created_at', 'option_fields']
 
@@ -68,3 +67,4 @@ class ListingSerializer(serializers.ModelSerializer):
     def validate_contact_name(self,value):
         if len(value) < 3 :
             raise serializers.ValidationError("Имя минимум 3 символа ")
+        return value

@@ -155,3 +155,8 @@ SIMPLE_JWT = {
 
 
 AUTH_USER_MODEL ='user.CustomUser'
+
+
+SPECTACULAR_SETTINGS = {
+    'COMPONENT_SPLIT_REQUEST': True,
+}

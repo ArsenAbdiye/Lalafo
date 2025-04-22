@@ -1,6 +1,6 @@
 from rest_framework import viewsets,mixins
 from rest_framework import status
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
+from drf_spectacular.utils import extend_schema
 from rest_framework.parsers import FormParser, MultiPartParser
 
 from .serializers import *
@@ -24,8 +24,11 @@ class CategoryOptionsViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet)
     serializer_class = CategoryOptionsSerializer
 
 
-@extend_schema(tags=['Listing'])
-class ListingCreateViewset(mixins.CreateModelMixin,mixins.ListModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+@extend_schema(
+    tags=['Listing'],
+    request=ListingSerializer,
+)
+class ListingCreateViewset(mixins.CreateModelMixin,mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
     parser_classes = (FormParser, MultiPartParser)
