@@ -5,7 +5,8 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions,status
 from drf_spectacular.utils import extend_schema
-from rest_framework.views import APIView
+import requests
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser
 
@@ -25,14 +26,11 @@ class RegisterView(mixins.CreateModelMixin , viewsets.GenericViewSet):
 class UserChangeNameViewSet(ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
-    @extend_schema(request=UserChageNameSerializer)
-    def update(self, request, pk=None):
+    def update(self, request,pk=None):
         serializer = UserChageNameSerializer(instance=request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'Никнейм успешно изменён'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @extend_schema(request=UserChageNameSerializer)
-    def partial_update(self, request, pk=None):
-        return self.update(request, pk)
+

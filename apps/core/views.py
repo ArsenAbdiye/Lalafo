@@ -16,7 +16,7 @@ class BurgerLinksViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = BurgerCategory.objects.all()
     serializer_class = BurgerCategorySerializer
 
-
+@extend_schema(tags=['Header'])
 class AdvertismentsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Advertisments.objects.all()
     serializer_class = AdvertismentsSerializer

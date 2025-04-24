@@ -45,12 +45,19 @@ class CategoryOptionsSerializer(serializers.ModelSerializer):
 
 
 class ListingSerializer(serializers.ModelSerializer):
+    favorites_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Listing
         fields = ['listing_image', 'description', 'category', 'price',
                 'currency', 'contact_name', 'phone_number', 'hide_phone',
-                'created_at', 'option_fields']
+                'created_at', 'option_fields','user','favorites_count']
 
+
+
+    def get_favorites_count(self, obj):
+        return obj.favorited_by.count()
+    
     def validate_phone_number(self,value):
         if not value.startswith("+996"):
             raise serializers.ValidationError("Номер должен начинаться с +996.")
@@ -68,3 +75,9 @@ class ListingSerializer(serializers.ModelSerializer):
         if len(value) < 3 :
             raise serializers.ValidationError("Имя минимум 3 символа ")
         return value
+    
+
+class FavoritSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorit
+        fields = ['listing']

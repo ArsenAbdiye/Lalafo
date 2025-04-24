@@ -47,3 +47,20 @@ class ListingAdmin(admin.ModelAdmin):
     list_display = ('id', 'description', 'category', 'price', 'currency', 'contact_name', 'phone_number', 'created_at', 'hide_phone')
     search_fields = ('description', 'contact_name', 'phone_number')
     list_filter = ('category', 'currency', 'hide_phone')
+
+
+@admin.register(PhoneNumber)
+class PhoneNumberAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(EmailAddress)
+class EmailAddressAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(ContactInfo)
+class ContactInfoAdmin(admin.ModelAdmin):
+    pass

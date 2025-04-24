@@ -3,5 +3,5 @@ from .models import *
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id','usernickname')
 
