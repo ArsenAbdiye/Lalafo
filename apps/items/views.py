@@ -38,7 +38,7 @@ class ListingCreateViewset(mixins.CreateModelMixin,mixins.ListModelMixin, viewse
 
 
 @extend_schema(tags=['Listing'])
-class FavoritAddViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class FavoritAddViewSet(mixins.CreateModelMixin,mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Favorit.objects.all()
     serializer_class = FavoritSerializer
     permission_classes = [permissions.IsAuthenticated,]
@@ -63,3 +63,31 @@ class FavoritAddViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         Favorit.objects.create(user=user, listing=listing)
         return Response({'detail': 'Добавлено в избранное.'}, status=status.HTTP_201_CREATED)
+    
+
+@extend_schema(tags=['Listing'])
+class SocialNetworkViewSet(mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = SocialNetwork.objects.all()
+    serializer_class = SocialNetworkSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema(tags=['Listing'])
+class PhoneNumberViewSet(mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = PhoneNumber.objects.all()
+    serializer_class = PhoneNumberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema(tags=['Listing'])
+class EmailAddressViewSet(mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = EmailAddress.objects.all()
+    serializer_class = EmailAddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema(tags=['Listing'])
+class AddressViewSet(mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]

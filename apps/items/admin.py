@@ -61,6 +61,3 @@ class EmailAddressAdmin(admin.ModelAdmin):
 class AddressAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(ContactInfo)
-class ContactInfoAdmin(admin.ModelAdmin):
-    pass

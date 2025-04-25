@@ -114,6 +114,7 @@ class Favorit(models.Model):
 class SocialNetwork(models.Model):
     social_network_name = models.CharField(max_length=30,verbose_name='Название социальной сети')
     social_network_link = models.URLField(verbose_name='Ссылка социальной сети')
+    listing = models.ForeignKey(Listing, related_name='social_network', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Социальная сеть'
@@ -122,19 +123,9 @@ class SocialNetwork(models.Model):
     def __str__(self):  
         return self.social_network_name
     
-class ContactInfo(models.Model):
-    name = models.CharField('Имя контакта', max_length=255)
-
-    class Meta:
-        verbose_name = 'Контактная информация'
-        verbose_name_plural = 'Контактные данные'
-
-    def __str__(self):
-        return self.name
-
 
 class PhoneNumber(models.Model):
-    contact = models.ForeignKey(ContactInfo, related_name='phone_numbers', on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, related_name='phone_numbers', on_delete=models.CASCADE)
     number = models.CharField('Номер телефона', max_length=20)
 
     class Meta:
@@ -146,7 +137,7 @@ class PhoneNumber(models.Model):
 
 
 class EmailAddress(models.Model):
-    contact = models.ForeignKey(ContactInfo, related_name='emails', on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, related_name='emails', on_delete=models.CASCADE)
     email = models.EmailField('Email')
 
     class Meta:
@@ -158,7 +149,7 @@ class EmailAddress(models.Model):
 
 
 class Address(models.Model):
-    contact = models.ForeignKey(ContactInfo, related_name='addresses', on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, related_name='addresses', on_delete=models.CASCADE)
     address = models.TextField('Адрес')
 
     class Meta:
@@ -166,4 +157,4 @@ class Address(models.Model):
         verbose_name_plural = 'Адреса'
 
     def __str__(self):
-        return self.address[:50]
+        return self.contact

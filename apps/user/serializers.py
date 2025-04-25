@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
-
-import phonenumbers
-from phonenumbers import NumberParseException
+from apps.items.validators import validate_kg_phone_number
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,17 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         read_only_fields = ('username','usernickname')
 
     def validate_phone(self,value):
-        if not value.startswith("+996"):
-            raise serializers.ValidationError("Номер должен начинаться с +996.")
-        try:
-            parsed_number = phonenumbers.parse(value, "KG")
-            if not phonenumbers.is_valid_number(parsed_number):
-                raise serializers.ValidationError("Невалидный номер телефона.")
-            
-        except NumberParseException:
-            raise serializers.ValidationError("Невозможно обработать номер телефона.")
-
-        return value
+        return validate_kg_phone_number(value)
 
     def create(self, validated_data):
         phone = validated_data['phone']
