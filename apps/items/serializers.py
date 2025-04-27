@@ -52,7 +52,7 @@ class FavoritSerializer(serializers.ModelSerializer):
 class PhoneNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneNumber
-        fields = ['id', 'number','listing']
+        fields = ['id','number','listing']
 
     def validate_number(self, value):
         return validate_kg_phone_number(value)
@@ -77,19 +77,13 @@ class SocialNetworkSerializer(serializers.ModelSerializer):
 
 
 class ListingSerializer(serializers.ModelSerializer):
-    phone_numbers = PhoneNumberSerializer(many=True)
-    emails = EmailAddressSerializer(many=True)
-    addresses = AddressSerializer(many=True)
-    social_network = SocialNetworkSerializer(many=True)
     favorites_count = serializers.SerializerMethodField()
-
     class Meta:
         model = Listing
         fields = ['listing_image', 'description', 'category', 'price',
                 'currency', 'contact_name', 'phone_number', 'hide_phone',
-                'created_at', 'option_fields','user','favorites_count',
-                'phone_numbers','emails','addresses','social_network','id']
-
+                'created_at', 'option_fields','favorites_count',
+                'id']
 
     def get_favorites_count(self, obj):
         return obj.favorited_by.count()
@@ -101,4 +95,13 @@ class ListingSerializer(serializers.ModelSerializer):
         if len(value) < 3 :
             raise serializers.ValidationError("Имя минимум 3 символа ")
         return value
- 
+    
+
+class ListingGetSerializer(serializers.ModelSerializer):
+    phone_numbers = PhoneNumberSerializer(many=True, read_only=True)
+    emails = EmailAddressSerializer(many=True, read_only=True)
+    addresses = AddressSerializer(many=True, read_only=True)
+    social_network = SocialNetworkSerializer(many=True, read_only=True)
+    class Meta:
+        model = Listing
+        fields = ['id','user','addresses','phone_numbers','emails','social_network']

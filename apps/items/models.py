@@ -126,7 +126,7 @@ class SocialNetwork(models.Model):
 
 class PhoneNumber(models.Model):
     listing = models.ForeignKey(Listing, related_name='phone_numbers', on_delete=models.CASCADE)
-    number = models.CharField('Номер телефона', max_length=20)
+    number = models.CharField('Номер телефона', max_length=600)
 
     class Meta:
         verbose_name = 'Телефон'
@@ -157,4 +157,4 @@ class Address(models.Model):
         verbose_name_plural = 'Адреса'
 
     def __str__(self):
-        return self.contact
+        return self.address
