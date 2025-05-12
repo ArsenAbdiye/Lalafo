@@ -31,7 +31,7 @@ router = routers.DefaultRouter()
 router.registry.extend(user_router.registry)
 router.registry.extend(core_router.registry)
 router.registry.extend(items_router.registry)
-
+from apps.user.views import vk_login_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'), 
@@ -39,6 +39,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/', include(router.urls)),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-  
-    
+    path('vk/login/', vk_login_view, name='vk_login'),
 ]

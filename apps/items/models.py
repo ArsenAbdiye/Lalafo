@@ -2,7 +2,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 
 from apps.user.models import CustomUser
-
+from apps.items.utils import directory_path
 
 class InfoPages(models.Model):
     page_title = models.CharField('Заголовок страницы', max_length=100)
@@ -17,7 +17,7 @@ class InfoPages(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=50,verbose_name='Название категории')
-    category_image = models.ImageField('Картинка категории', upload_to='category_image')
+    category_image = models.ImageField('Картинка категории', upload_to=directory_path)
 
     class Meta:
         verbose_name = "Категория"
@@ -29,7 +29,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     sub_category_name = models.CharField(max_length=50,verbose_name='Название подкатегории')
-    sub_category_image = models.ImageField('Картинка категории', upload_to='category_image', null=True,blank=True)
+    sub_category_image = models.ImageField('Картинка категории', upload_to=directory_path, null=True,blank=True)
     parent_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories', verbose_name='Родительская категория')
     class Meta:
         verbose_name = "Подкатегория"
@@ -41,7 +41,7 @@ class SubCategory(models.Model):
 
 class SubSubCategory(models.Model):
     subsub_category_name = models.CharField(max_length=50,verbose_name='Название под-подкатегории')
-    subsub_category_image = models.ImageField('Картинка категории', upload_to='category_image', null=True,blank=True)
+    subsub_category_image = models.ImageField('Картинка категории', upload_to=directory_path, null=True,blank=True)
     parent_subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name='subsubcategories', verbose_name='Родительская подкатегория')
 
     class Meta:
@@ -54,7 +54,7 @@ class SubSubCategory(models.Model):
 
 
 class CategoryOptions(models.Model):
-    option_title = models.CharField(max_length=50,verbose_name="Зголовок опции")
+    option_title = models.CharField(max_length=50,verbose_name="Заголовок опции")
     subsub_category = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE, related_name='subsubcategories', verbose_name='под-подкатегории')
     self_completion = models.BooleanField(default=False)
 
@@ -78,10 +78,9 @@ class CategoryOptionsFields(models.Model):
         return self.option_field
     
 
-class Listing(models.Model):
-    listing_image = models.ImageField('Картника объявления', upload_to='listing_image')
+class Ad(models.Model):
     description = models.TextField(max_length=6000, verbose_name="Описание")
-    category = models.IntegerField(verbose_name="Id категории")
+    category = models.ForeignKey('SubSubCategory', on_delete=models.CASCADE,verbose_name="Id категории")
     price = models.DecimalField(max_digits=12, decimal_places=2,verbose_name="Цена")
     past_price = models.DecimalField(max_digits=12,decimal_places=2,verbose_name='Прошлая цена',null=True)
     currency = models.CharField(max_length=3, choices=[('KGS', 'KGS'), ('USD', 'USD')], default='KGS', verbose_name="Валюта")
@@ -89,32 +88,59 @@ class Listing(models.Model):
     phone_number = models.CharField(max_length=20, verbose_name="Телефон",blank=True,null=True)
     hide_phone = models.BooleanField(default=False, verbose_name="Скрыть номер")
     created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(blank=True,null=True)
     option_fields = models.JSONField(default=dict, verbose_name="Поля опций")
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='listening_user',verbose_name='Пользователь объявления')
-    
-    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='ad_user',verbose_name='Пользователь объявления')
+    impressions = models.PositiveIntegerField(default=0,verbose_name="Показы")
+    views = models.PositiveIntegerField(default=0,verbose_name="Просмотры")
+    is_deactivate = models.BooleanField(default=False)
+
+
     class Meta:
         verbose_name = "Объявление"
         verbose_name_plural = "Объявления"
 
     def __str__(self):  
         return self.description
+
+
+class AdMapСoordinates(models.Model):
+    ad = models.OneToOneField('Ad', on_delete=models.CASCADE, related_name='coordinates')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='Широта')
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='Долгота')
+
+    class Meta:
+        verbose_name = 'Координаты карты объявления'
+        verbose_name_plural = 'Координаты карты объявления'
+
+    def __str__(self):
+        return f'Локация для объявления {self.ad.id}'
+    
+
+class AdImage(models.Model):
+    ad = models.ForeignKey('Ad', on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to=directory_path)
     
     
+    class Meta:
+        verbose_name = 'Изображение объявления'
+        verbose_name_plural = 'Изображения объявления'
+
+        
 class Favorit(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='favorites', verbose_name='Пользователь')
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='favorited_by', verbose_name='Объявление')
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='favorited_by', verbose_name='Объявление')
 
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
-        unique_together = ('user', 'listing')
+        unique_together = ('user', 'ad')
 
 
 class SocialNetwork(models.Model):
     social_network_name = models.CharField(max_length=30,verbose_name='Название социальной сети')
     social_network_link = models.URLField(verbose_name='Ссылка социальной сети')
-    listing = models.ForeignKey(Listing, related_name='social_network', on_delete=models.CASCADE)
+    Ad = models.ForeignKey(Ad, related_name='social_network', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Социальная сеть'
@@ -125,7 +151,7 @@ class SocialNetwork(models.Model):
     
 
 class PhoneNumber(models.Model):
-    listing = models.ForeignKey(Listing, related_name='phone_numbers', on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, related_name='phone_numbers', on_delete=models.CASCADE)
     number = models.CharField('Номер телефона', max_length=600)
 
     class Meta:
@@ -137,7 +163,7 @@ class PhoneNumber(models.Model):
 
 
 class EmailAddress(models.Model):
-    listing = models.ForeignKey(Listing, related_name='emails', on_delete=models.CASCADE)
+    Ad = models.ForeignKey(Ad, related_name='emails', on_delete=models.CASCADE)
     email = models.EmailField('Email')
 
     class Meta:
@@ -149,7 +175,7 @@ class EmailAddress(models.Model):
 
 
 class Address(models.Model):
-    listing = models.ForeignKey(Listing, related_name='addresses', on_delete=models.CASCADE)
+    Ad = models.ForeignKey(Ad, related_name='addresses', on_delete=models.CASCADE)
     address = models.TextField('Адрес')
 
     class Meta:
@@ -158,3 +184,34 @@ class Address(models.Model):
 
     def __str__(self):
         return self.address
+    
+
+class WorkDays(models.Model):
+    monday = models.CharField(max_length=30, verbose_name='Понедельник', default='Круглосуточно')
+    tuesday = models.CharField(max_length=30, verbose_name='Вторник', default='Круглосуточно')
+    wednesday = models.CharField(max_length=30, verbose_name='Среда', default='Круглосуточно')
+    thursday = models.CharField(max_length=30, verbose_name='Четверг', default='Круглосуточно')
+    friday = models.CharField(max_length=30, verbose_name='Пятница', default='Круглосуточно')
+    saturday = models.CharField(max_length=30, verbose_name='Суббота', default='Круглосуточно')
+    sunday = models.CharField(max_length=30, verbose_name='Воскресенье', default='Круглосуточно')
+    Ad = models.OneToOneField(Ad, related_name='work_days', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Дни работы'
+
+    def __str__(self):
+        return f"График работы для объявления {self.Ad.id}"
+    
+
+class СategoryAdvertising(models.Model):
+    title = models.CharField(max_length=250,verbose_name='Заголовок рекламы')
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='category_advertising', null=True, blank=True)
+    subcategory = models.ForeignKey('SubCategory', on_delete=models.CASCADE, related_name='subcategories_advertising', null=True, blank=True)
+    subsubcategory = models.ForeignKey('SubSubCategory', on_delete=models.CASCADE, related_name='subsubcategories_advertising', null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = 'Реклама категории'
+        verbose_name_plural = 'Рекламы категорий'

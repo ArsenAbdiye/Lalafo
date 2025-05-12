@@ -1,8 +1,9 @@
 from django.db import models
 
+from apps.items.utils import directory_path
 
 class SiteLogo(models.Model):
-    header_logo = models.ImageField('Лого сайта', upload_to='header_site')
+    header_logo = models.ImageField('Лого сайта', upload_to=directory_path)
     
     class Meta:
         verbose_name = 'Лого сайта'
@@ -38,7 +39,7 @@ class BurgerLinks(models.Model):
     
 
 class Advertisments(models.Model):
-    advertisment_image = models.ImageField('Реклама',upload_to='advertisment')
+    advertisment_image = models.ImageField('Реклама',upload_to=directory_path)
     advertisment_url = models.URLField(verbose_name='Ссылка рекламы')
     order = models.PositiveIntegerField("Порядок", default=1)
 

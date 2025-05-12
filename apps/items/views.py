@@ -1,13 +1,17 @@
+from django.http import JsonResponse
 from rest_framework import viewsets,mixins
 from rest_framework import status
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import permissions
 from rest_framework.response import Response
+from django.db.models import F
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import *
 from .models import *
 from apps.items.mixins import *
+from .filters import AdFilter
 
 @extend_schema(tags=['Info page'])
 class InfoPageViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -27,18 +31,18 @@ class CategoryOptionsViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet)
     serializer_class = CategoryOptionsSerializer
 
 
-@extend_schema(tags=['Listing'])
-class ListingCreateViewset(mixins.CreateModelMixin,viewsets.GenericViewSet):
-    queryset = Listing.objects.all()
-    serializer_class = ListingSerializer
-    permission_classes = [permissions.IsAuthenticated,]
+@extend_schema(tags=['Ad'])
+class AdViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    queryset = Ad.objects.all()
+    serializer_class = AdSerializer
+    permission_classes = [permissions.IsAuthenticated]
     parser_classes = (FormParser, MultiPartParser)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-@extend_schema(tags=['Listing'])
+@extend_schema(tags=['Ad'])
 class FavoritAddViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = Favorit.objects.all()
     serializer_class = FavoritSerializer
@@ -46,55 +50,162 @@ class FavoritAddViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def create(self, request):
         user = request.user
-        listing_id = request.data.get('listing')
+        ad_id = request.data.get('ad')
 
-        if not listing_id:
-            return Response({'detail': 'listing ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not ad_id:
+            return Response({'detail': 'Ad ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            listing = Listing.objects.get(pk=listing_id)
-        except Listing.DoesNotExist:
+            ad = Ad.objects.get(pk=ad_id)
+        except ad_id.DoesNotExist:
             return Response({'detail': 'Объявление не найдено.'}, status=status.HTTP_404_NOT_FOUND)
 
-        favorite = Favorit.objects.filter(user=user, listing=listing).first()
+        favorite = Favorit.objects.filter(user=user, ad=ad).first()
 
         if favorite:
             favorite.delete()
             return Response({'detail': 'Удалено из избранного.'}, status=status.HTTP_200_OK)
 
-        Favorit.objects.create(user=user, listing=listing)
+        Favorit.objects.create(user=user, ad=ad)
         return Response({'detail': 'Добавлено в избранное.'}, status=status.HTTP_201_CREATED)
     
 
-@extend_schema(tags=['Listing parameters'])
+@extend_schema(tags=['Ad parameters'])
 class PhoneNumberViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = PhoneNumber.objects.all()
     serializer_class = PhoneNumberSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-@extend_schema(tags=['Listing parameters'])
+@extend_schema(tags=['Ad parameters'])
 class AddressViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-@extend_schema(tags=['Listing parameters'])
+@extend_schema(tags=['Ad parameters'])
 class EmailAddressViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = EmailAddress.objects.all()
     serializer_class = EmailAddressSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-@extend_schema(tags=['Listing parameters'])
+@extend_schema(tags=['Ad parameters'])
 class SocialNetworkViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = SocialNetwork.objects.all()
     serializer_class = SocialNetworkSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-@extend_schema(tags=['Listing'])
-class ListingGetViewSet( mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Listing.objects.all()
-    serializer_class = ListingGetSerializer
+@extend_schema(tags=['Ad parameters'])
+class WorkDaysViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = WorkDays.objects.all()
+    serializer_class = WorkDaysSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema(tags=['Ad parameters'])
+class AdImagesViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = AdImage.objects.all()
+    serializer_class = AdImageChangeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = (FormParser, MultiPartParser)
+
+
+@extend_schema(tags=['Ad'])
+class AdGetByUserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Ad.objects.all()
+    serializer_class = AdCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+
+    def get_queryset(self):
+        return Ad.objects.filter(is_deactivate=False)
+    
+    def list(self, request):
+        user = request.user
+        ad = Ad.objects.filter(user=user) 
+
+        serializer = self.get_serializer(ad, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+@extend_schema(tags=['Category'])
+class СategoryAdvertisingViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = СategoryAdvertising.objects.all()
+    serializer_class = СategoryAdvertisingSerializer
+
+
+@extend_schema(tags=['Ad'])
+class AdUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    queryset = Ad.objects.all()
+    serializer_class = AdUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        ad = self.get_object()
+
+        if ad.user != self.request.user:
+            raise PermissionDenied("Вы не можете изменить чужое объявление.")
+
+        serializer.save()
+
+
+@extend_schema(
+    tags=['Ad'],
+    parameters=[
+        OpenApiParameter(name='category', type=int, description='ID категории', required=False),
+        OpenApiParameter(name='subcategory', type=int, description='ID подкатегории', required=False),
+        OpenApiParameter(name='subsub_category', type=int, description='ID под-подкатегории', required=False),
+        OpenApiParameter(name='min_price', type=int, description='Минимальная цена', required=False),
+        OpenApiParameter(name='max_price', type=int, description='Максимальная цена', required=False),
+        OpenApiParameter(name='description', type=str, description='Поиск по описанию', required=False),
+        OpenApiParameter(name='is_active', type=bool, description='Активность объявления', required=False),
+    ]
+)
+class AdCardViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Ad.objects.all()
+    serializer_class = AdCardSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = AdFilter  
+
+    def get_queryset(self):
+        return Ad.objects.filter(is_deactivate=False)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        queryset.update(impressions=F('impressions') + 1)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+@extend_schema(tags=['Ad'])
+class AdDetailViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    queryset = Ad.objects.all()
+    serializer_class = AdDetailSerializer
+
+    def get_queryset(self):
+        return Ad.objects.filter(is_deactivate=False)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views = (instance.views or 0) + 1
+        instance.save(update_fields=["views"])
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+    
+
+@extend_schema(tags=['Ad'])
+class CategoryOptionViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    queryset = SubSubCategory.objects.all()
+    serializer_class = SubSubCategoryOptions
+
+
+@extend_schema(tags=['Ad'])
+class AdMapСoordinatesViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
+    queryset = AdMapСoordinates.objects.all()
+    serializer_class = AdMapСoordinatesSerializer
+    permission_classes = [permissions.IsAuthenticated]

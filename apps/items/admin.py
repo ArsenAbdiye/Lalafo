@@ -42,8 +42,8 @@ class CategoryOptionsFieldsAdmin(admin.ModelAdmin):
     search_fields = ('option_field',)
 
 
-@admin.register(Listing)
-class ListingAdmin(admin.ModelAdmin):
+@admin.register(Ad)
+class AdAdmin(admin.ModelAdmin):
     list_display = ('id', 'description', 'category', 'price', 'currency', 'contact_name', 'phone_number', 'created_at', 'hide_phone')
     search_fields = ('description', 'contact_name', 'phone_number')
     list_filter = ('category', 'currency', 'hide_phone')
@@ -53,11 +53,23 @@ class ListingAdmin(admin.ModelAdmin):
 class PhoneNumberAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(EmailAddress)
 class EmailAddressAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(WorkDays)
+class WorkDaysAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(СategoryAdvertising)
+class СategoryAdvertisingAdmin(admin.ModelAdmin):
     pass
 
