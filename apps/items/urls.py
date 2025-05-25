@@ -5,6 +5,8 @@ items_router = routers.DefaultRouter()
 
 items_router.register(r'info_pages', InfoPageViewset,basename='info_pages')
 items_router.register(r'categorys', CategoryViewset,basename='categorys')
+items_router.register(r'subcategorys', SubCategoryViewset,basename='subcategorys')
+items_router.register(r'subsubcategorys', SubSubCategoryViewset,basename='subsubcategorys')
 items_router.register(r'category_options', CategoryOptionsViewset,basename='category_options')
 items_router.register(r'ad', AdViewSet,basename='ad')
 items_router.register(r'favorit_add', FavoritAddViewSet,basename='favorit_add')
@@ -19,8 +21,9 @@ items_router.register(r'ad_update', AdUpdateViewSet,basename='ad_update')
 items_router.register(r'ad_images', AdImagesViewSet,basename='ad_images')
 items_router.register(r'ad_card', AdCardViewSet,basename='ad_card')
 items_router.register(r'ad_detail', AdDetailViewSet,basename='ad_detail')
-items_router.register(r'ad_category_options', CategoryOptionViewSet,basename='ad_category_options')
 items_router.register(r'ad_map_coordinates', AdMapСoordinatesViewSet,basename='ad_map_coordinates')
+items_router.register(r'citys', citysViewSet,basename='citys')
+items_router.register(r'category_by_id', SubSubCategoryByIdViewset,basename='category_by_id')
 
 
 

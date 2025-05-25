@@ -1,30 +1,119 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import *
 from apps.items.validators import validate_kg_phone_number
 import requests
 from django.contrib.auth import authenticate
 from django.contrib.auth import password_validation
-from django.contrib.auth import get_user_model
+from .tasks import send_verification_email_task
+from .utils import *
 
-
-class RegisterWithPasswordSerializer(serializers.ModelSerializer):
+class RegisterWithEmailCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('phone', 'username', 'usernickname', 'password')
-        read_only_fields = ('username', 'usernickname')
-
-    def validate_phone(self, value):
-        return validate_kg_phone_number(value)
+        fields = ('email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        phone = validated_data['phone']
-        user = CustomUser(username=phone, phone=phone)
-        user.set_password(validated_data.get('password'))
+        email = validated_data['email'].lower()
+        password = validated_data['password']
+
+        user = CustomUser.objects.create(
+            email=email,
+            username=email,
+            is_active=False
+        )
+        user.set_password(password)
         user.save()
         user.usernickname = f"account{user.id}"
         user.save()
+
+        code = generate_verification_code()
+        EmailVerificationCode.objects.create(user=user, code=code)
+
+        send_verification_email_task.delay(user.id, code)
+
         return user
     
+
+class ConfirmCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+
+    def validate(self, data):
+        email = data['email'].lower()
+        code = data['code']
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("Пользователь не найден")
+
+        record = EmailVerificationCode.objects.filter(user=user, code=code).last()
+
+        if not record or record.is_expired():
+            raise serializers.ValidationError("Код неверный или истёк")
+
+        data['user'] = user
+        return data
+
+    def save(self):
+        user = self.validated_data['user']
+        user.is_active = True
+        user.save()
+        user.usernickname = f"account{user.id}"
+        user.save()
+        EmailVerificationCode.objects.filter(user=user).delete()
+        return user
+    
+
+
+class ResendCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        try:
+            user = CustomUser.objects.get(email=value.lower(), is_active=False)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("Пользователь не найден или уже активирован")
+        return value.lower()
+
+    def save(self):
+        email = self.validated_data['email']
+        user = CustomUser.objects.get(email=email)
+
+        EmailVerificationCode.objects.filter(user=user).delete()
+
+        code = generate_verification_code()
+        EmailVerificationCode.objects.create(user=user, code=code)
+        send_verification_email_task.delay(user.id, code)
+        return user
+    
+
+class ConfirmCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+
+    def validate(self, data):
+        email = data['email']
+        code = data['code']
+        try:
+            user = CustomUser.objects.get(email=email)
+            record = EmailVerificationCode.objects.filter(user=user, code=code).last()
+            if not record or record.is_expired():
+                raise serializers.ValidationError("Код неверный или истёк")
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("Пользователь не найден")
+
+        return data
+
+    def save(self):
+        email = self.validated_data['email']
+        user = CustomUser.objects.get(email=email)
+        user.is_active = True
+        user.save()
+        EmailVerificationCode.objects.filter(user=user).delete()
+        return user
+
 
 class RegisterWithGoogleSerializer(serializers.ModelSerializer):
     google_token = serializers.CharField(write_only=True)
@@ -76,30 +165,6 @@ class UserOptionsSerializer(serializers.ModelSerializer):
         fields = ['user_image','usernickname','user_discription']
 
 
-
-
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
-
-    def validate(self, data):
-        username = data.get("username")
-        password = data.get("password")
-
-        if "@" in username:
-            try:
-                user_obj = CustomUser.objects.get(email=username)
-                username = user_obj.phone
-            except CustomUser.DoesNotExist:
-                raise serializers.ValidationError("Пользователь с таким email не найден.")
-
-        user = authenticate(username=username, password=password)
-        if not user:
-            raise serializers.ValidationError("Неверный логин или пароль.")
-        data['user'] = user
-        return data
-    
-
 class UpdatePhoneEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -126,10 +191,10 @@ class UpdatePhoneEmailSerializer(serializers.ModelSerializer):
 
         if phone:
             instance.phone = phone
-            instance.username = phone  
 
         if email:
             instance.email = email
+            instance.username = email  
 
 
         instance.save()

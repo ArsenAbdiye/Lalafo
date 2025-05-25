@@ -26,9 +26,27 @@ class CategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 @extend_schema(tags=['Category'])
+class SubCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = SubCategory.objects.all()
+    serializer_class = SubCategorySerializer
+
+
+@extend_schema(tags=['Category'])
+class SubSubCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = SubSubCategory.objects.all()
+    serializer_class = SubSubCategorySerializer
+
+
+@extend_schema(tags=['Category'])
+class SubSubCategoryByIdViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = SubSubCategory.objects.all()
+    serializer_class = SubSubCategorySerializer
+
+
+@extend_schema(tags=['Category'])
 class CategoryOptionsViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    queryset = CategoryOptions.objects.all()
-    serializer_class = CategoryOptionsSerializer
+    queryset = SubSubCategory.objects.all()
+    serializer_class = CategoryOptionsGetSerializer
 
 
 @extend_schema(tags=['Ad'])
@@ -199,13 +217,14 @@ class AdDetailViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     
 
 @extend_schema(tags=['Ad'])
-class CategoryOptionViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
-    queryset = SubSubCategory.objects.all()
-    serializer_class = SubSubCategoryOptions
-
-
-@extend_schema(tags=['Ad'])
 class AdMapСoordinatesViewSet(OwnerCheckMixin, mixins.CreateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
     queryset = AdMapСoordinates.objects.all()
     serializer_class = AdMapСoordinatesSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema(tags=['Ad'])
+class citysViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+    queryset = Citys.objects.all()
+    serializer_class = CitysSerializer
+

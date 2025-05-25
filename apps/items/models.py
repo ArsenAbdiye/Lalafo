@@ -52,7 +52,6 @@ class SubSubCategory(models.Model):
         return self.subsub_category_name
     
 
-
 class CategoryOptions(models.Model):
     option_title = models.CharField(max_length=50,verbose_name="Заголовок опции")
     subsub_category = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE, related_name='subsubcategories', verbose_name='под-подкатегории')
@@ -76,7 +75,18 @@ class CategoryOptionsFields(models.Model):
 
     def __str__(self):  
         return self.option_field
-    
+
+
+class Citys(models.Model):
+    city_name = models.CharField(max_length=50,verbose_name='Город')
+
+    class Meta:
+        verbose_name = "Город"
+        verbose_name_plural = "Города"
+
+    def __str__(self):  
+        return self.city_name
+
 
 class Ad(models.Model):
     description = models.TextField(max_length=6000, verbose_name="Описание")
@@ -94,6 +104,7 @@ class Ad(models.Model):
     impressions = models.PositiveIntegerField(default=0,verbose_name="Показы")
     views = models.PositiveIntegerField(default=0,verbose_name="Просмотры")
     is_deactivate = models.BooleanField(default=False)
+    city =models.ForeignKey(Citys, on_delete=models.CASCADE, related_name='city',verbose_name='city')
 
 
     class Meta:

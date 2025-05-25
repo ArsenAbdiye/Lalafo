@@ -73,3 +73,7 @@ class WorkDaysAdmin(admin.ModelAdmin):
 class СategoryAdvertisingAdmin(admin.ModelAdmin):
     pass
 
+
+@admin.register(Citys)
+class CitysAdmin(admin.ModelAdmin):
+    pass

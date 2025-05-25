@@ -15,7 +15,13 @@ class SiteLogo(models.Model):
 
 class BurgerCategory(models.Model):
     category_text = models.CharField(max_length=30,verbose_name='Текст бургер категории')
-
+    category_link = models.URLField(verbose_name='Ссылка',null=True)
+    is_social = models.BooleanField(default=False)
+    is_instagram = models.BooleanField(default=False)
+    is_twitter = models.BooleanField(default=False)
+    is_facebook = models.BooleanField(default=False)
+   
+   
     class Meta:
         verbose_name = 'Категория бургера'
         verbose_name_plural = 'Категории бургера'

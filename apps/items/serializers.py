@@ -14,21 +14,19 @@ class InfoPagesSerializer(serializers.ModelSerializer):
 class SubSubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubSubCategory
-        fields = ['id', 'subsub_category_name', 'subsub_category_image']
+        fields = ['id', 'subsub_category_name', 'subsub_category_image','parent_subcategory']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-    subsubcategories = SubSubCategorySerializer(many=True,read_only=True)
     class Meta:
         model = SubCategory
-        fields = ['id', 'sub_category_name', 'sub_category_image','subsubcategories']
+        fields = ['id', 'sub_category_name', 'sub_category_image','parent_category']
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    subcategories = SubCategorySerializer(many=True,read_only=True)
     class Meta:
         model = Category
-        fields = ['id', 'category_name', 'category_image','subcategories']
+        fields = ['id', 'category_name', 'category_image']
 
 
 class CategoryOptionsFieldsSerializer(serializers.ModelSerializer):
@@ -39,11 +37,16 @@ class CategoryOptionsFieldsSerializer(serializers.ModelSerializer):
 
 class CategoryOptionsSerializer(serializers.ModelSerializer):
     category_option = CategoryOptionsFieldsSerializer(many=True, read_only=True)
-
     class Meta:
         model = CategoryOptions
         fields = ['id', 'option_title', 'category_option']
 
+
+class CategoryOptionsGetSerializer(serializers.ModelSerializer):
+    subsubcategories = CategoryOptionsSerializer(many=True, read_only=True)
+    class Meta:
+        model = SubSubCategory
+        fields = ['id', 'subsubcategories']
 
 class FavoritSerializer(serializers.ModelSerializer):
     class Meta:
@@ -100,8 +103,8 @@ class AdSerializer(serializers.ModelSerializer):
         model = Ad
         fields = ['images', 'uploaded_images', 'description', 'category', 'price',
                 'currency', 'contact_name', 'phone_number', 'hide_phone',
-                'created_at', 'option_fields','favorites_count',
-                'id']
+                'created_at','favorites_count',
+                'id','option_fields','city']
 
     def get_favorites_count(self, obj):
         return obj.favorited_by.count()
@@ -117,6 +120,9 @@ class AdSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         uploaded_images = validated_data.pop('uploaded_images', [])
         ad = Ad.objects.create(**validated_data)
+        for image in uploaded_images:
+            AdImage.objects.create(ad=ad, image=image)
+
         for image in uploaded_images:
             AdImage.objects.create(ad=ad, image=image)
         return ad
@@ -222,7 +228,7 @@ class AdDetailSerializer(serializers.ModelSerializer):
             'images', 'description', 'category', 'price','past_price',
             'currency', 'contact_name', 'phone_number', 'hide_phone',
             'created_at', 'option_fields', 'favorites_count',
-            'id', 'user','impressions','views'
+            'id', 'user','impressions','views','city'
         ]
 
     def get_favorites_count(self, obj):
@@ -254,3 +260,9 @@ class AdMapСoordinatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdMapСoordinates
         fields = ('__all__')
+
+
+class CitysSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Citys
+        fields = ['id','city_name']

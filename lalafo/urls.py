@@ -26,12 +26,12 @@ from rest_framework_simplejwt.views import (
 from apps.user.urls import user_router
 from apps.core.urls import core_router
 from apps.items.urls import items_router
+from lalafo import settings
 
 router = routers.DefaultRouter()
 router.registry.extend(user_router.registry)
 router.registry.extend(core_router.registry)
 router.registry.extend(items_router.registry)
-from apps.user.views import vk_login_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'), 
@@ -39,5 +39,10 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/', include(router.urls)),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('vk/login/', vk_login_view, name='vk_login'),
+    path('', include('apps.core.urls')),
+    
 ]
+
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

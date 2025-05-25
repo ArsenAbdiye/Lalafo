@@ -1,9 +1,11 @@
 from rest_framework import viewsets,mixins
-from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from django.shortcuts import render
 
 from .serializers import *
 from .models import *
+from apps.items.models import *
+from apps.user.models import *
 
 @extend_schema(tags=['Header'])
 class SiteLogoViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -30,3 +32,23 @@ class FooterSiteLinksViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
 class FooterCopyrightViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = FooterCopyright.objects.all()
     serializer_class = FooterCopyrightSerializer
+
+
+from .models import *
+from apps.items.models import *
+from apps.user.models import *
+from django.http import JsonResponse
+
+def mainpage_view(request):
+    logo = SiteLogo.objects.all()
+    burger_categories = BurgerCategory.objects.prefetch_related('link').all()
+    categories = Category.objects.all()
+    social_categories = burger_categories.filter(is_social=True)
+    regular_categories = burger_categories.filter(is_social=False)
+    return render(request, 'core/index.html',
+        {
+            'logo':logo,
+            'social_categories': social_categories,
+            'regular_categories': regular_categories,
+            'categories':categories
+        })

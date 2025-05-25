@@ -17,15 +17,36 @@ from apps.user.tasks import send_reset_password_email
 
 
 @extend_schema(tags=['User'])
-class RegisterWithPasswordView(viewsets.GenericViewSet):
-    serializer_class = RegisterWithPasswordSerializer
+class RegisterWithEmailCodeView(viewsets.GenericViewSet):
+    serializer_class = RegisterWithEmailCodeSerializer
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'detail': 'Пользователь успешно создан.'}, status=status.HTTP_200_OK)
-    
+
+
+@extend_schema(tags=['User'])
+class ConfirmCodeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    serializer_class = ConfirmCodeSerializer
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Аккаунт активирован"}, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['User'])
+class ResendCodeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    serializer_class = ResendCodeSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Код отправлен повторно"}, status=status.HTTP_200_OK)
+
 
 @extend_schema(tags=['User'])
 class RegisterWithGoogleView(viewsets.GenericViewSet):
@@ -135,7 +156,7 @@ class RegisterWithCodeView(viewsets.GenericViewSet):
 
 
 @extend_schema(tags=["User"])
-class UserOptionsViewSet(mixins.CreateModelMixin,mixins.RetrieveModelMixin,
+class UserOptionsViewSet(mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,viewsets.GenericViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserOptionsSerializer
@@ -159,22 +180,6 @@ class UserContactsViewSet(mixins.UpdateModelMixin,viewsets.GenericViewSet):
 
     def get_object(self):
         return self.request.user
-
-
-@extend_schema(tags=["User"])
-class LoginViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    serializer_class = LoginSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
     
 
 @extend_schema(tags=["User"])
