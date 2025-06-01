@@ -162,7 +162,7 @@ class RegisterWithCodeSerializer(serializers.Serializer):
 class UserOptionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['user_image','usernickname','user_discription']
+        fields = ['user_image','usernickname','user_discription','is_vip','is_pro']
 
 
 class UpdatePhoneEmailSerializer(serializers.ModelSerializer):

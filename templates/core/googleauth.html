@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Auth Callback</title>
+</head>
+<body>
+  <p>Авторизация через Google...</p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (code) {
+      fetch('/api/auth/google/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ google_token: code })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Ошибка Google входа');
+        return res.json();
+      })
+      .then(data => {
+        // Сохраняем токены
+        localStorage.setItem('accessToken', data.access);
+        localStorage.setItem('refreshToken', data.refresh);
+
+        // Перенаправляем обратно на главную
+        window.location.href = '/';
+      })
+      .catch(err => {
+        console.error('Ошибка при авторизации через Google:', err);
+        alert('Ошибка авторизации через Google');
+      });
+    } else {
+      alert('Код авторизации не получен');
+    }
+  </script>
+</body>
+</html>

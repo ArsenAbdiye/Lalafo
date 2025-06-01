@@ -126,10 +126,12 @@ header{
     align-items: center;
     gap: 20px;
 }
-.head_links a{
+.head_links button{
+    all: unset;
     text-decoration: none;
     color: #737d9b;
     transition: .5s;
+    cursor: pointer;
 }
 .log:hover{
     color: rgb(136, 209, 27);
@@ -199,7 +201,7 @@ header{
     margin-right: 12px;
 }
 .LFSubHeading {
-    width: max-content;
+    text-align: center;
 }
 .LFIcon {
     transition: 0.2s;
@@ -362,6 +364,7 @@ header{
     padding: 16px;
     box-sizing: border-box;
     font-size: 14px;
+    cursor: pointer;
 }
 .card_image img{
     width: 100%;
@@ -399,4 +402,467 @@ header{
 }
 .cards_section h1{
     margin-left: 38px;
+}
+.cards_section{
+    margin-top: 20px;
+}
+
+.log_inp{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 101;
+}
+.log_window{
+    width: 460px;
+    height: 517px;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    position: fixed;
+}
+.svg{
+    width: 20px;
+    height: 20px;
+}
+.log_window{
+    padding: 72px 32px 32px 32px;
+}
+.log_or_reg{
+    display: flex;
+    justify-content: space-around;
+}
+.log_inps{
+    margin-top: 40px;
+}
+.log_or_reg button{
+    all: unset;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 500;
+    color: rgb(34, 202, 70);
+    cursor: pointer;
+}
+
+.LFInput__input {
+    padding: 12px;
+    outline: none;
+    background: rgb(255, 255, 255);
+    font-size: 16px;
+    line-height: 24px;
+    width: 100%;
+    height: 48px;
+    border: 1px solid rgb(217, 221, 231);
+    border-radius: 8px;
+    transition: 0.2s ease-in-out;
+}
+.LFIcon.size-16 svg {
+    font-size: 16px;
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
+}
+.LFInput__wrapper.with-icon .LFIcon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 12px;
+}
+.LFInput__wrapper {
+    position: relative;
+}
+.LFInput__row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.LFIcon svg {
+    position: relative;
+    display: block;
+    z-index: 1;
+}
+.login-form__field {
+    margin-bottom: 18px;
+}
+.LFInput__input {
+    padding-left: 36px;
+}
+.LFInputPassword__row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.LFInputPassword__wrapper {
+    position: relative;
+}
+.LFIconLock {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    right: auto;
+}
+.LFInputPassword__input {
+    padding: 12px 40px 12px 36px;
+    outline: none;
+    background: rgb(255, 255, 255);
+    font-size: 16px;
+    line-height: 24px;
+    width: 100%;
+    height: 48px;
+    border: 1px solid rgb(217, 221, 231);
+    border-radius: 8px;
+    transition: color 0.1s ease-in-out, border 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+.LFInputPassword__visibility-toggler {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: auto;
+    right: 0px;
+    width: 36px;
+    height: 100%;
+    cursor: pointer;
+}
+.LFIconLock {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    right: auto;
+}
+
+.LFInputPassword__wrapper {
+    position: relative;
+}
+.LFIconLock {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: auto;
+}
+.login-form__controls {
+    text-align: center;
+}
+.LFButton {
+    margin-top: 30px;
+    margin-bottom: 32px;
+    background-color: rgb(34, 202, 70);
+    color: rgb(255, 255, 255);
+    border: 2px solid transparent;
+    font-size: 16px;
+    line-height: 24px;
+    height: 48px;
+    min-width: 160px;   
+    border-radius: 30px;
+    width: 240px;   
+    cursor: pointer;
+}
+.modal__close{
+    position: absolute;
+    top: 80px;
+    right: 470px;
+    cursor: pointer;
+}
+.forgot-password{
+    cursor: pointer;
+}
+
+.log_inp{
+    left: -100%;
+}
+
+.reg_inp{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 101;
+}
+
+.LFPhoneInput__mask-text {
+    margin-left: 8px;
+    margin-right: 16px;
+}
+.LFIconPhone {
+    align-self: center;
+    margin-top: 2px;
+}
+
+
+.LFPhoneInput__wrapper {
+    display: flex;
+    -webkit-box-align: baseline;
+    align-items: center;
+    flex-direction: row-reverse;
+    height: 48px;
+    border: 1px solid rgb(217, 221, 231);
+    border-radius: 8px;
+    transition: 0.2s ease-in-out;
+    background-color: rgb(255, 255, 255);
+    vertical-align: baseline;
+}
+.LFPhoneInput__input{
+    background: transparent;
+    font-size: 16px;
+    height: 24px;
+    width: 100%;
+    border: none;
+}
+
+.LFInput{
+    margin-top: 50px;
+}
+.underline{
+    width: 100%;
+    height: 20px;
+    background-color: black;
+}
+.reg_btn{
+    display: flex;
+}
+.registration-form__confirm {
+    display: block;
+    width: 100%;
+    margin-bottom: 18px;
+}
+.registration-form__confirm-controls {
+    display: flex;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font: inherit;
+    vertical-align: baseline;
+}
+.LFCheckbox {
+    position: relative;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    cursor: pointer;
+}
+.reg_inp{
+    left: -100%;
+}
+.res_pass{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 101;
+}
+
+.resres{
+    margin-top: 30px;
+}
+.res_win{
+    height: 450px;
+}
+.asd{
+    top: 120px;
+}
+.res_pass{
+    left: -100%;
+}
+
+
+
+.user_button img{
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.user_button svg{
+    width: 14px;
+    height: 14px;
+}
+.user_button{
+    height: 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.user_button p {
+    color: rgb(115, 125, 155);
+    font-weight: 400;   
+    white-space: nowrap;     
+    overflow: hidden;     
+    text-overflow: ellipsis;     
+    max-width: 100px;            
+}
+
+.dropdown-menu-wrap {
+    position: absolute;
+    right: 0;
+    padding-top: 10px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font: inherit;
+    vertical-align: baseline;
+    z-index: 102    ;
+}
+.user_info{
+    position: relative;
+}
+.dropdown-menu {
+    background-color: rgb(255, 255, 255);
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: rgba(10, 19, 49, 0.08) 0px 4px 14px;
+    border: 0px;
+    font: inherit;
+    vertical-align: baseline;
+    list-style: none;
+    width: 400px;
+}
+.user-menu__list-item {
+    margin-bottom: 12px;
+    margin-top: 10px;
+}
+.LFLink {
+    font-size: 16px;
+    line-height: 24px;
+    color: rgb(10, 19, 49);
+    text-decoration: none;
+}
+.css-1qa90nz {
+    position: relative;
+    padding: 24px 16px;
+    background: linear-gradient(45deg, rgb(21, 178, 241) 0%, rgb(11, 120, 227) 98.04%);
+    border-radius: 12px;
+}
+.loggo {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+.loggo img {
+    width: 120px;
+    height: 20px;
+}
+.LFSubHeading.weight-500 {
+    font-weight: 500;
+}
+.LFSubHeading.size-14 {
+    font-size: 14px;
+    line-height: 21px;
+}
+.LFSubHeading {
+    text-align: center;
+}
+
+.LFButton.small {
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 21px;
+    min-width: 82px;
+    height: 33px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    color: #0a1331;
+    border-radius: 20px;
+}
+.lalafo-club-banner{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dropdown-menu-wrap{
+    display: none ;
+}
+
+.user_info{
+    display: none;
+}
+.LFParagraph{
+    cursor: pointer;
+}
+.code{
+    display: none;
+}
+
+.values{
+    width: 100%;
+    text-align: center;
+}
+.values button{
+    margin: 10px 0;
+}
+.values p{
+    margin-bottom: 30px;
+}
+
+.gogle{
+    cursor: pointer;
+    width: 100px;
+    background-color: white;
+    border: 1px solid rgb(126, 126, 255);
+    border-radius: 10px;
+    padding: 5px 5px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.gogle img{
+    width: 20px;
+}
+.LFInput{
+    margin-top: 20px;
+}
+.LFButton{
+    margin-top: 10px;
+}
+
+.slides{
+    width: 600px;
+    height: 600px;
+}
+
+.main_info{
+    width: 600px;
+}
+
+.actions svg{
+    width: 20px;
+}
+.actions{
+    display: flex;
+    justify-content: space-between;
+}
+.subs{
+    display: flex;
+}
+.contact_block{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f2f7;
+}
+.contact_block img{
+    width: 40px;
+}
+.contact_block svg{
+    width: 20px;
+}
+.LFButton.primary-pink {
+    background-color: #ff2366;
+    border: 2px solid transparent;
+    color: #ffffff;
 }

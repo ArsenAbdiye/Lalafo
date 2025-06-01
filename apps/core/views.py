@@ -52,3 +52,18 @@ def mainpage_view(request):
             'regular_categories': regular_categories,
             'categories':categories
         })
+
+
+def card_detail(request):
+    logo = SiteLogo.objects.all()
+    burger_categories = BurgerCategory.objects.prefetch_related('link').all()
+    categories = Category.objects.all()
+    social_categories = burger_categories.filter(is_social=True)
+    regular_categories = burger_categories.filter(is_social=False)
+    return render(request, 'core/card_detail.html',
+        {
+            'logo':logo,
+            'social_categories': social_categories,
+            'regular_categories': regular_categories,
+            'categories':categories
+        })

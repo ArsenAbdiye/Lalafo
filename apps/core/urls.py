@@ -14,5 +14,7 @@ core_router.register(r'advertisments', AdvertismentsViewset,basename='advertisme
 
 
 urlpatterns = [
-    path('', mainpage_view, name='mainpage')
+    path('', mainpage_view, name='mainpage'),
+    path('card_detail', card_detail, name='card_detail')
+
 ]
