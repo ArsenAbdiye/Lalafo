@@ -15,6 +15,9 @@ core_router.register(r'advertisments', AdvertismentsViewset,basename='advertisme
 
 urlpatterns = [
     path('', mainpage_view, name='mainpage'),
-    path('card_detail', card_detail, name='card_detail')
+    path('card_detail', card_detail, name='card_detail'),
+    path('cards_search', cards_search, name='cards_search'),
+    path('ad_create', ad_create, name='ad_create'),
+    path('settings', settings, name='settings')
 
 ]

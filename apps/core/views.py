@@ -67,3 +67,47 @@ def card_detail(request):
             'regular_categories': regular_categories,
             'categories':categories
         })
+
+def cards_search(request):
+    logo = SiteLogo.objects.all()
+    burger_categories = BurgerCategory.objects.prefetch_related('link').all()
+    categories = Category.objects.all()
+    social_categories = burger_categories.filter(is_social=True)
+    regular_categories = burger_categories.filter(is_social=False)
+    return render(request, 'core/cards_search.html',
+        {
+            'logo':logo,
+            'social_categories': social_categories,
+            'regular_categories': regular_categories,
+            'categories':categories
+        })
+
+
+def ad_create(request):
+    logo = SiteLogo.objects.all()
+    burger_categories = BurgerCategory.objects.prefetch_related('link').all()
+    categories = Category.objects.all()
+    social_categories = burger_categories.filter(is_social=True)
+    regular_categories = burger_categories.filter(is_social=False)
+    return render(request, 'core/ad_create.html',
+        {
+            'logo':logo,
+            'social_categories': social_categories,
+            'regular_categories': regular_categories,
+            'categories':categories
+        })
+
+
+def settings(request):
+    logo = SiteLogo.objects.all()
+    burger_categories = BurgerCategory.objects.prefetch_related('link').all()
+    categories = Category.objects.all()
+    social_categories = burger_categories.filter(is_social=True)
+    regular_categories = burger_categories.filter(is_social=False)
+    return render(request, 'core/settings.html',
+        {
+            'logo':logo,
+            'social_categories': social_categories,
+            'regular_categories': regular_categories,
+            'categories':categories
+        })

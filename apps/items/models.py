@@ -62,7 +62,7 @@ class CategoryOptions(models.Model):
         verbose_name_plural = "Опции категории"
 
     def __str__(self):  
-        return self.option_title
+        return str(self.option_title)
     
 
 class CategoryOptionsFields(models.Model):
@@ -74,7 +74,7 @@ class CategoryOptionsFields(models.Model):
         verbose_name_plural = "Поля категории"
 
     def __str__(self):  
-        return self.option_field
+        return str(self.option_field)
 
 
 class Citys(models.Model):
@@ -88,9 +88,33 @@ class Citys(models.Model):
         return self.city_name
 
 
+class AdCategoryFields(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='category_fields',verbose_name='category_fields')
+    category = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE,verbose_name="Id категории")
+    class Meta:
+        verbose_name = "Поля категорий объявления"
+        verbose_name_plural = "Поля категорий объявления"
+
+    def __str__(self):  
+        return f"{self.user}"
+
+class ChosenFields(models.Model):
+    option = models.ForeignKey(CategoryOptions,on_delete=models.CASCADE, related_name='option')
+    field = models.ForeignKey(CategoryOptionsFields,on_delete=models.CASCADE, related_name='field',null=True)
+    ad_categoy_fields = models.ForeignKey(AdCategoryFields, on_delete=models.CASCADE, related_name='ad_categoy_fields',verbose_name='ad_categoy_fields')
+
+    class Meta:
+        verbose_name = "Выбранное поле"
+        verbose_name_plural = "Выбранные поля"
+
+    def __str__(self):  
+        return f"{self.field}"
+
+
 class Ad(models.Model):
     description = models.TextField(max_length=6000, verbose_name="Описание")
-    category = models.ForeignKey('SubSubCategory', on_delete=models.CASCADE,verbose_name="Id категории")
+    category = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE,verbose_name="Id категории")
+    category_options = models.ForeignKey(AdCategoryFields, on_delete=models.CASCADE,verbose_name="Поля категории")
     price = models.DecimalField(max_digits=12, decimal_places=2,verbose_name="Цена")
     past_price = models.DecimalField(max_digits=12,decimal_places=2,verbose_name='Прошлая цена',null=True)
     currency = models.CharField(max_length=3, choices=[('KGS', 'KGS'), ('USD', 'USD')], default='KGS', verbose_name="Валюта")
@@ -99,7 +123,6 @@ class Ad(models.Model):
     hide_phone = models.BooleanField(default=False, verbose_name="Скрыть номер")
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(blank=True,null=True)
-    option_fields = models.JSONField(default=dict, verbose_name="Поля опций")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='ad_user',verbose_name='Пользователь объявления')
     impressions = models.PositiveIntegerField(default=0,verbose_name="Показы")
     views = models.PositiveIntegerField(default=0,verbose_name="Просмотры")

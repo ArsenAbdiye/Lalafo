@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets,mixins
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.parsers import FormParser, MultiPartParser,JSONParser
 from rest_framework import permissions
 from rest_framework.response import Response
 from django.db.models import F
@@ -43,7 +43,7 @@ class SubSubCategoryByIdViewset(mixins.RetrieveModelMixin, viewsets.GenericViewS
     serializer_class = SubSubCategorySerializer
 
 
-@extend_schema(tags=['Category'])
+@extend_schema(tags=['Ad'])
 class CategoryOptionsViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = SubSubCategory.objects.all()
     serializer_class = CategoryOptionsGetSerializer
@@ -56,6 +56,16 @@ class AdViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = (FormParser, MultiPartParser)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+@extend_schema(tags=['Ad'])
+class AdCategoryFieldsViewSet(mixins.CreateModelMixin,mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = AdCategoryFields.objects.all()
+    serializer_class =AdCategoryFieldsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = (JSONParser, FormParser, MultiPartParser)
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -174,26 +184,25 @@ class AdUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 @extend_schema(
     tags=['Ad'],
     parameters=[
-        OpenApiParameter(name='category', type=int, description='ID категории', required=False),
+        OpenApiParameter(name='category_name', type=int, description='ID категории', required=False),
         OpenApiParameter(name='subcategory', type=int, description='ID подкатегории', required=False),
         OpenApiParameter(name='subsub_category', type=int, description='ID под-подкатегории', required=False),
         OpenApiParameter(name='min_price', type=int, description='Минимальная цена', required=False),
         OpenApiParameter(name='max_price', type=int, description='Максимальная цена', required=False),
         OpenApiParameter(name='description', type=str, description='Поиск по описанию', required=False),
-        OpenApiParameter(name='is_active', type=bool, description='Активность объявления', required=False),
     ]
 )
 class AdCardViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Ad.objects.all()
     serializer_class = AdCardSerializer
     filter_backends = (DjangoFilterBackend,)
-    filter_class = AdFilter  
+    filterset_class = AdFilter  
 
     def get_queryset(self):
         return Ad.objects.filter(is_deactivate=False)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.filter_queryset(self.get_queryset())  
 
         queryset.update(impressions=F('impressions') + 1)
 
@@ -208,12 +217,7 @@ class AdDetailViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
 
     def get_queryset(self):
         return Ad.objects.filter(is_deactivate=False)
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.views = (instance.views or 0) + 1
-        instance.save(update_fields=["views"])
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+
     
 
 @extend_schema(tags=['Ad'])

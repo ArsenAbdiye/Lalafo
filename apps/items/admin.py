@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import *
-
+import nested_admin
 
 @admin.register(InfoPages)
 class InfoPagesAdmin(admin.ModelAdmin):
@@ -22,24 +22,21 @@ class SubCategoryAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 
+class CategoryOptionsFieldsInline(nested_admin.NestedTabularInline):
+    model = CategoryOptionsFields
+    extra = 1
+
+
+class CategoryOptionsInline(nested_admin.NestedStackedInline):
+    model = CategoryOptions
+    extra = 1
+    inlines = [CategoryOptionsFieldsInline]
+
+
 @admin.register(SubSubCategory)
-class SubSubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'subsub_category_name', 'parent_subcategory')
-    search_fields = ('subsub_category_name',)
-    list_filter = ('parent_subcategory',)
-    ordering = ('id',)
-
-
-@admin.register(CategoryOptions)
-class CategoryOptionsAdmin(admin.ModelAdmin):
-    list_display = ('option_title',)
-
-
-@admin.register(CategoryOptionsFields)
-class CategoryOptionsFieldsAdmin(admin.ModelAdmin):
-    list_display = ('option_field', 'option')
-    list_filter = ('option',)
-    search_fields = ('option_field',)
+class SubSubCategoryAdmin(nested_admin.NestedModelAdmin):
+    inlines = [CategoryOptionsInline]
+    list_display = ("id","subsub_category_name")
 
 
 @admin.register(Ad)
@@ -77,3 +74,13 @@ class СategoryAdvertisingAdmin(admin.ModelAdmin):
 @admin.register(Citys)
 class CitysAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(ChosenFields)
+class ChosenFieldsAdmin(admin.ModelAdmin):
+    list_display = ['id']
+
+@admin.register(AdCategoryFields)
+class AdCategoryFieldsAdmin(admin.ModelAdmin):
+    list_display = ['id','user','category']
+
+

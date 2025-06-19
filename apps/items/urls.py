@@ -9,6 +9,7 @@ items_router.register(r'subcategorys', SubCategoryViewset,basename='subcategorys
 items_router.register(r'subsubcategorys', SubSubCategoryViewset,basename='subsubcategorys')
 items_router.register(r'category_options', CategoryOptionsViewset,basename='category_options')
 items_router.register(r'ad', AdViewSet,basename='ad')
+items_router.register(r'ad_category_options', AdCategoryFieldsViewSet,basename='ad_category_options')
 items_router.register(r'favorit_add', FavoritAddViewSet,basename='favorit_add')
 items_router.register(r'phone_number', PhoneNumberViewSet,basename='phone_number')
 items_router.register(r'adress', AddressViewSet,basename='adress')

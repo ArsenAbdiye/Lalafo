@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'ckeditor',
     'django_filters',
+    'nested_admin'
     
 
 ]

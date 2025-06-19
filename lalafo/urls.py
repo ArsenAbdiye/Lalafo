@@ -34,6 +34,7 @@ router.registry.extend(core_router.registry)
 router.registry.extend(items_router.registry)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('nested_admin/', include('nested_admin.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'), 
     path('api/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
