@@ -1,3 +1,9 @@
+if (localStorage.getItem('editAdId')) {
+    console.warn('');
+    return;
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.querySelector('.burger_menu button');
     const menu = document.querySelector('.burger_menu');
@@ -7,6 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
             menu.classList.toggle('open');
         });
     }
+});
+
+const cityMap = {}; 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const datalist = document.getElementById("cityList");
+
+    fetch('/api/citys/')
+        .then(res => res.json())
+        .then(data => {
+            data.results.forEach(city => {
+                cityMap[city.city_name.trim().toLowerCase()] = city.id;
+                
+                const option = document.createElement("option");
+                option.value = city.city_name;
+                datalist.appendChild(option);
+            });
+        });
 });
 
 const imageInput = document.getElementById('imageInput');
@@ -31,6 +56,16 @@ imageInput.addEventListener('change', function () {
         reader.onload = function (e) {
             const img = document.createElement('img');
             img.src = e.target.result;
+            img.style.cursor = 'pointer'; 
+
+            img.addEventListener('click', () => {
+                const index = selectedImages.indexOf(file);
+                if (index > -1) {
+                    selectedImages.splice(index, 1); 
+                }
+                previewContainer.removeChild(img); 
+            });
+
             previewContainer.appendChild(img);
         };
 
@@ -171,7 +206,7 @@ ulCategories.addEventListener('click', event => {
             formData.subsubId = subsubId;
             formData.options = {};
 
-            optionsContainer.innerHTML = '<strong>Опции:</strong>'; 
+            optionsContainer.innerHTML = '<strong>Опции:</strong>';
 
             try {
                 const response = await fetch(`/api/category_options/${subsubId}/`);
@@ -222,6 +257,9 @@ const publishBtn = document.querySelector('.cre_btn');
 publishBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
+    const selectedCityName = document.getElementById("cityInput").value.trim().toLowerCase();
+    const cityId = cityMap[selectedCityName];
+
     const token = localStorage.getItem('accessToken');
     if (!token) {
         alert('Токен не найден. Пожалуйста, войдите в систему.');
@@ -237,8 +275,13 @@ publishBtn.addEventListener('click', async (e) => {
         alert('Выберите опции категории.');
         return;
     }
+    if (!cityId) {
+        alert('Выберите город из выпадающего списка.');
+        console.log(cityId);
+        
+        return;
+    }
 
-    // ✅ ВЕРНЫЙ ПОРЯДОК: сначала option, потом field
     const bodyCategoryOptions = {
         category: formData.subsubId,
         ad_categoy_fields: Object.entries(formData.options).map(([optionId, fieldId]) => ({
@@ -247,7 +290,6 @@ publishBtn.addEventListener('click', async (e) => {
         }))
     };
 
-    console.log("📦 Отправляем на /api/ad_category_options/:", JSON.stringify(bodyCategoryOptions, null, 2));
 
     try {
         const responseOptions = await fetch('/api/ad_category_options/', {
@@ -285,7 +327,7 @@ publishBtn.addEventListener('click', async (e) => {
         formDataToSend.append('contact_name', 'Имя контакта'); // ← Замени на ввод с формы
         formDataToSend.append('phone_number', document.querySelector('.cre_phone input').value.trim());
         formDataToSend.append('hide_phone', true); // ← Или false
-        formDataToSend.append('city', 1); // ← Замени на динамический ID
+        formDataToSend.append('city', cityId); // ← Замени на динамический ID
 
         const responseAd = await fetch('/api/ad/', {
             method: 'POST',
@@ -310,3 +352,5 @@ publishBtn.addEventListener('click', async (e) => {
         alert('Ошибка при отправке данных. Попробуйте позже.');
     }
 });
+
+

@@ -1557,7 +1557,7 @@ header {
     border: 1px solid #ff2366;
 }
 
-.price_inp {
+.cre_inps {
     padding: 12px;
     outline: none;
     background: rgb(255, 255, 255);
@@ -1568,6 +1568,7 @@ header {
     border: 1px solid rgb(217, 221, 231);
     border-radius: 8px;
     transition: 0.2s ease-in-out;
+    margin: 10px 0;
 }
 
 .subsubcategoriesContainer ul {
@@ -1613,7 +1614,7 @@ header {
     width: 80%;
 }
 
-.set_inpt{
+.set_inpt {
     padding: 12px;
     outline: none;
     background: #ffffff;
@@ -1625,7 +1626,8 @@ header {
     border-radius: 8px;
     transition: all .2s ease-in-out;
 }
-.main_info_set textarea{
+
+.main_info_set textarea {
     width: 100%;
     padding: 12px;
     outline: none;
@@ -1640,7 +1642,7 @@ header {
     min-height: 98px;
 }
 
-.set_button{
+.set_button {
     font-size: 13px;
     line-height: 24px;
     height: 38px;
@@ -1650,24 +1652,29 @@ header {
     background-color: #e83e2e !important;
     border-radius: 20px;
 }
-.save_set{
+
+.save_set {
     margin-left: 370px;
     text-align: center;
     margin-top: 30px;
+    cursor: pointer;
 }
-.set_svg{
-    border: 2px solid  #e83e2e;
+
+.set_svg {
+    border: 2px solid #e83e2e;
     background-color: white !important;
     border-radius: 50%;
     padding: 5px;
     font-size: 2px;
 }
-.user_img_btn_set{
+
+.user_img_btn_set {
     display: flex;
     align-items: center;
     gap: 20px;
 }
-.user_image_setin img{
+
+.user_image_setin img {
     width: 80px;
     height: 80px;
     object-fit: cover;
@@ -1675,46 +1682,185 @@ header {
 }
 
 
-.mail_set{
-    display: none;
-}
-.phone_set{
-    display: none;
-}
-.pass_set{
+.mail_set {
     display: none;
 }
 
-.set_pp{
+.phone_set {
+    display: none;
+}
+
+.pass_set {
+    display: none;
+}
+
+.set_pp {
     font-size: 14px;
     line-height: 21px;
     color: rgb(115, 125, 155);
-    margin-bottom: 10px ;
+    margin-bottom: 10px;
 }
 
-.set_list{
+.set_list {
     display: flex;
 }
 
-.first_set ul{
+.first_set ul {
     list-style: none;
 }
-.first_set li{
+
+.first_set li {
     width: 100%;
     border-radius: 5px;
     transition: .5s;
     padding: 10px;
+    cursor: pointer;
 
 }
-.first_set li:hover{
+
+.first_set li:hover {
     background-color: #e7e7e7;
 }
-.set_list{
+
+.set_list {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-.list_ds{
+
+.list_ds {
     color: #a1a8bd;
     font-size: 12px;
+}
+
+.nav_set {
+    margin: 10px 20px 30px 20px;
+}
+
+.nav_set ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+
+}
+
+.nav_set ul li {
+    color: rgb(115, 125, 155);
+    cursor: pointer;
+    transition: .5s;
+}
+
+.nav_set ul li:hover {
+    color: #e83e2e;
+    text-decoration: underline;
+}
+
+
+.nav_set li.active_tab {
+    color: #e83e2e;
+    text-decoration: underline;
+}
+
+.user_cards_set {
+    display: none;
+}
+
+.card_set {
+    width: 100%;
+
+}
+
+.cards_box_set {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.user_cards_set {
+    width: 100%;
+}
+
+.card_btns_set {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.card_btns_set button {
+    text-decoration: none;
+    font: inherit;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    color: rgb(115, 125, 155);
+    display: flex;
+    justify-content: center;
+    background: none;
+}
+
+.set_toggle {
+    background-color: #e83e2e !important;
+    color: white !important;
+    filter: none !important;
+    position: relative;
+    z-index: 1;
+}
+
+
+.card_btns_set button svg {
+    width: 15px;
+}
+
+.gray-filter {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.cre_city {
+    display: flex;
+    margin: 20px 0;
+}
+
+.cre_city form {
+    display: flex;
+    flex-direction: column;
+}
+
+.cre_city input {
+    padding: 10px;
+    outline: none;
+    margin: 5px 0;
+    border: 1px solid rgb(217, 221, 231);
+    border-radius: 5px;
+}
+
+.cre_imgs img:hover {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+#weekly-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#weekly-schedule label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#weekly-schedule select {
+    width: 120px;
+    padding: 4px;
+    font-size: 13px;
+    outline: none;
+    border: 1px solid #e83e2e;
+    border-radius: 5px;
+    color: #e83e2e;
+}
+
+.cre_options{
+    display: none;
 }

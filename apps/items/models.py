@@ -172,9 +172,8 @@ class Favorit(models.Model):
 
 
 class SocialNetwork(models.Model):
-    social_network_name = models.CharField(max_length=30,verbose_name='Название социальной сети')
     social_network_link = models.URLField(verbose_name='Ссылка социальной сети')
-    Ad = models.ForeignKey(Ad, related_name='social_network', on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, related_name='social_network', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Социальная сеть'
@@ -197,7 +196,7 @@ class PhoneNumber(models.Model):
 
 
 class EmailAddress(models.Model):
-    Ad = models.ForeignKey(Ad, related_name='emails', on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, related_name='emails', on_delete=models.CASCADE)
     email = models.EmailField('Email')
 
     class Meta:
@@ -209,7 +208,7 @@ class EmailAddress(models.Model):
 
 
 class Address(models.Model):
-    Ad = models.ForeignKey(Ad, related_name='addresses', on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, related_name='addresses', on_delete=models.CASCADE)
     address = models.TextField('Адрес')
 
     class Meta:
@@ -228,7 +227,7 @@ class WorkDays(models.Model):
     friday = models.CharField(max_length=30, verbose_name='Пятница', default='Круглосуточно')
     saturday = models.CharField(max_length=30, verbose_name='Суббота', default='Круглосуточно')
     sunday = models.CharField(max_length=30, verbose_name='Воскресенье', default='Круглосуточно')
-    Ad = models.OneToOneField(Ad, related_name='work_days', on_delete=models.CASCADE)
+    ad = models.OneToOneField(Ad, related_name='work_days', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Дни работы'

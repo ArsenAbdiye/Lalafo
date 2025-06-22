@@ -7,6 +7,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
 
 from .serializers import *
 from .models import *
@@ -50,7 +51,7 @@ class CategoryOptionsViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet)
 
 
 @extend_schema(tags=['Ad'])
-class AdViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+class AdViewSet(mixins.CreateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -58,6 +59,24 @@ class AdViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def perform_destroy(self, instance):
+        if instance.user != self.request.user:
+            raise PermissionDenied("Вы не можете удалять чужие объявления")
+        instance.delete()
+
+    @action(detail=True, methods=['POST'], url_path='deactivate')
+    def toggle_activation(self, request, pk=None):
+        ad = self.get_object()
+
+        if ad.user != request.user:
+            return Response({"detail": "Нельзя менять статус чужого объявления."}, status=status.HTTP_403_FORBIDDEN)
+
+        ad.is_deactivate = not ad.is_deactivate
+        ad.save()
+
+        status_str = "деактивировано" if ad.is_deactivate else "активировано"
+        return Response({"detail": f"Объявление {status_str}."})
 
 
 @extend_schema(tags=['Ad'])

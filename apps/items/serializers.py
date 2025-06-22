@@ -93,19 +93,19 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
 class EmailAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailAddress
-        fields = ['id', 'email','Ad']
+        fields = ['id', 'email','ad']
 
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ['id', 'address','Ad']
+        fields = ['id', 'address','ad']
 
 
 class SocialNetworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialNetwork
-        fields = ['id', 'social_network_name', 'social_network_link','Ad']
+        fields = ['id','social_network_link','ad']
 
 
 class WorkDaysSerializer(serializers.ModelSerializer):
@@ -285,7 +285,7 @@ class AdCardSerializer(serializers.ModelSerializer):
     first_image = serializers.SerializerMethodField()
     class Meta:
         model = Ad
-        fields = ['id','first_image','price','past_price','category','description','user']
+        fields = ['id','first_image','price','past_price','category','description','user','is_deactivate']
     
     def get_first_image(self, obj):
         first = obj.images.first()
@@ -323,6 +323,10 @@ class AdDetailSerializer(serializers.ModelSerializer):
     favorites_count = serializers.SerializerMethodField()
     category_options =AdCategoryFieldsDetailSerializer(read_only=True)
     category =DetailSubSubCategorySerializer(read_only=True)
+    social_network = SocialNetworkSerializer(read_only=True,many=True)
+    phone_numbers = PhoneNumberSerializer(read_only=True,many=True)
+    emails = EmailAddressSerializer(read_only=True,many=True)
+    work_days = WorkDaysSerializer(read_only=True)
 
     class Meta:
         model = Ad
@@ -330,7 +334,7 @@ class AdDetailSerializer(serializers.ModelSerializer):
             'images', 'description', 'category','category_options', 'price','past_price',
             'currency', 'contact_name', 'phone_number', 'hide_phone',
             'created_at', 'favorites_count',
-            'id', 'user','impressions','views','city'
+            'id', 'user','impressions','views','city','social_network','work_days','phone_numbers','emails'
         ]
 
     def get_favorites_count(self, obj):

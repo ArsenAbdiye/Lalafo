@@ -316,11 +316,11 @@
                                     </div>
                                 </div>
                                 <li class="user-menu__list-item"><a class="LFLink large  weight-400 "
-                                        href="https://lalafo.kg/account" target="_blank">Мои объявления</a></li>
+                                        href="" target="_blank">Мои объявления</a></li>
                                 <li class="user-menu__list-item"><a class="LFLink large  weight-400 "
-                                        href="https://lalafo.kg/account/settings" target="_blank">Настройки</a></li>
+                                        href="" target="_blank">Настройки</a></li>
                                 <li class="user-menu__list-item"><a class="LFLink large  weight-400 "
-                                        href="https://lalafo.kg/account/efficiency" target="_blank">Эффективность</a>
+                                        href="" target="_blank">Эффективность</a>
                                 </li>
                                 <li class="user-menu__list-item user-logout">
                                     <p class="LFParagraph get_out size-16  " style="color: rgb(115, 125, 155);">Выйти
@@ -334,10 +334,17 @@
             </div>
         </div>
     </header>
+    <div class="nav_set">
+        <ul>
+            <li class="li_main_set">Настройки профиля</li>
+            <li class="li_user_cards_set">Мои объявления</li>
+            <li>Избранные объявления</li>
+        </ul>
+    </div>
     <section class="main_set">
         <div class="first_set">
             <ul>
-                <li>
+                <li class="user_li_set">
                     <div class="set_list">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
                             <path
@@ -351,7 +358,7 @@
                         </div>
                     </div>
                 </li>
-                <li>
+                <li class="email_li_set">
                     <div class="set_list">
                         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" fill="#737d9b"
@@ -360,11 +367,11 @@
                         </svg>
                         <div>
                             <p class="list_name">email</p>
-                            <p class="list_ds">abdievarsen091@gmail.com</p>
+                            <p class="list_ds em_li_set">abdievarsen091@gmail.com</p>
                         </div>
                     </div>
                 </li>
-                <li>
+                <li class="phone_li_set">
                     <div class="set_list">
                         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" fill="#737d9b"
@@ -373,11 +380,11 @@
                         </svg>
                         <div>
                             <p class="list_name">Телефон</p>
-                            <p class="list_ds"></p>
+                            <p class="list_ds ph_li_set"></p>
                         </div>
                     </div>
                 </li>
-                <li>
+                <li class="pass_li_set">
                     <div class="set_list">
                         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -426,25 +433,34 @@
                 <p class="set_p">Основной email</p>
                 <p class="set_pp">Этот email используется только для входа в профиль и не отображается в контактах
                     профиля и в объявлениях</p>
-                <input class="set_inpt" type="text"  placeholder="Введите имейл" maxlength="60">
-                <button class="save_set set_button">Сохранить</button>
+                <input class="set_inpt email_input" type="text"  placeholder="Введите имейл" maxlength="60">
+                <button class="save_set save_set_email  set_button">Сохранить</button>
             </div>
             <div class="phone_set">
                 <p class="set_p">Телефон</p>
                 <p class="set_pp">Этот телефон используется только для входа в профиль и не отображается в контактах
                     профиля и в объявлениях</p>
-                <input class="set_inpt" type="text"  placeholder="Введите имейл" maxlength="60">
-                <button class="save_set set_button">Сохранить</button>
+                <input class="set_inpt phone_input" type="text"  placeholder="Введите имейл" maxlength="60">
+                <button class="save_set save_set_phone set_button">Сохранить</button>
             </div>
             <div class="pass_set">
                 <h2>Изменение пароля</h2>
                 <p class="set_p">Текущий пароль</p>
-                <input class="set_inpt" type="text"  placeholder="Текущий пароль" maxlength="60">
+                <input class="set_inpt current_pass" type="text"  placeholder="Текущий пароль" maxlength="60">
                 <p class="set_p">Новый пароль</p>
-                <input class="set_inpt" type="text"  placeholder="Новый пароль" maxlength="60">
+                <input class="set_inpt new_pass" type="text"  placeholder="Новый пароль" maxlength="60">
                 <p class="set_p">Подтвердите пароль</p>
-                <input class="set_inpt" type="text"  placeholder="Подтвердите пароль" maxlength="60">
-                <button class="save_set set_button">Сохранить</button>
+                <input class="set_inpt confirm_pass" type="text"  placeholder="Подтвердите пароль" maxlength="60">
+                <button class="save_set pass_btn_set set_button">Сохранить</button>
+            </div>
+        </div>
+    </section>
+    <section class="user_cards_set ">
+        <div class="cards_box cards_box_set">
+            <div class="dis_cards">
+                <div class="cards cards_ser">
+                    
+                </div>
             </div>
         </div>
     </section>
